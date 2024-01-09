@@ -16,33 +16,12 @@ public class  BossesConvert implements Convert<BossesDTO, Bosses> {
     @Override
     public BossesDTO convertDTO(Bosses entity) {
 
-        Set<ServiceDTO> serviceDTOS = new HashSet<>(
-                entity.getMyCompany().getMyServices()
-                        .stream().map(services -> new ServiceDTO(
-                                services.getId(),
-                                services.getLabel(),
-                                services.getIcon(),
-                                services.getRouterLink(),
-                                null, null)
-                        )
-                        .toList()
-        );
-
-        Set<InternalServiceDTO> internalServiceDTOS = new HashSet<>(
-                entity.getMyCompany().getMyServicesInternal().stream()
-                        .map(is -> new InternalServiceDTO(is.getId(), is.getLabel(), is.getIcon(), is.getRouterLink()))
-                        .toList()
-        );
-
-
         return new BossesDTO(
                 entity.getId(),
                 entity.getName(),
                 entity.getLastName(),
                 entity.getEmail(),
-                entity.getDni(),
-                serviceDTOS,
-                internalServiceDTOS
+                entity.getDni()
         );
     }
 

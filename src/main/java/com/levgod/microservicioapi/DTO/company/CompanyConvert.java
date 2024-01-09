@@ -3,6 +3,10 @@ package com.levgod.microservicioapi.DTO.company;
 import com.levgod.microservicioapi.DTO.*;
 import com.levgod.microservicioapi.DTO.bossess.BossesConvert;
 import com.levgod.microservicioapi.DTO.bossess.BossesDTO;
+import com.levgod.microservicioapi.DTO.chargeOfCompany.ChargeOfCompanyConvert;
+import com.levgod.microservicioapi.DTO.chargeOfCompany.ChargeOfCompanyDTO;
+import com.levgod.microservicioapi.DTO.employees.EmployeeConvert;
+import com.levgod.microservicioapi.DTO.employees.EmployeeDTO;
 import com.levgod.microservicioapi.DTO.internalServices.InternalServiceConvert;
 import com.levgod.microservicioapi.DTO.internalServices.InternalServiceDTO;
 import com.levgod.microservicioapi.DTO.services.ServiceConvert;
@@ -23,10 +27,22 @@ public class CompanyConvert implements Convert<CompanyDTO, Company> {
         BossesConvert bossesConvert = new BossesConvert();
         InternalServiceConvert internalServiceConvert = new InternalServiceConvert();
         ServiceConvert serviceConvert = new ServiceConvert();
+        EmployeeConvert employeeConvert = new EmployeeConvert();
+        ChargeOfCompanyConvert ofCompanyConvert = new ChargeOfCompanyConvert();
 
         Set<BossesDTO> bossesDTO = new HashSet<>(
                 entity.getBosses().stream()
                         .map(bossesConvert::convertDTO).toList()
+        );
+
+        Set<ChargeOfCompanyDTO> ofCompanyDTOS = new HashSet<>(
+                entity.getChargeOfCompanies()
+                        .stream().map(ofCompanyConvert::convertDTO).toList()
+        );
+
+        Set<EmployeeDTO> employeeDTO = new HashSet<>(
+                entity.getEmployees()
+                        .stream().map(employeeConvert::convertDTO).toList()
         );
 
         Set<InternalServiceDTO> internalServiceDTOS = new HashSet<>(
@@ -46,7 +62,10 @@ public class CompanyConvert implements Convert<CompanyDTO, Company> {
                 entity.getEmail(),
                 entity.getAddress(),
                 entity.getIconCompany(),
-                bossesDTO, simpleServiceDTOS,
+                bossesDTO,
+                ofCompanyDTOS,
+                employeeDTO,
+                simpleServiceDTOS,
                 internalServiceDTOS);
     }
 

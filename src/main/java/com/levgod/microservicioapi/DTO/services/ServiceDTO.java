@@ -12,6 +12,6 @@ public record ServiceDTO(
         String icon,
         String routerLink,
         Set<InternalServiceDTO> internalServices,
-        Set<SimpleCompanyDTO> simpleCompanyDTOS
+        Set<SimpleCompanyDTO> companies
 ) {
 }

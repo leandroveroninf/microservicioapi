@@ -4,7 +4,10 @@ import com.levgod.microservicioapi.entities.Company;
 import com.levgod.microservicioapi.entities.Employee;
 import com.levgod.microservicioapi.entities.InternalService;
 import com.levgod.microservicioapi.entities.Services;
+import com.levgod.microservicioapi.repositories.CompanyRespository;
 import com.levgod.microservicioapi.repositories.EmployeeRepository;
+import com.levgod.microservicioapi.repositories.InternalServiceRepository;
+import com.levgod.microservicioapi.repositories.ServicesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -22,10 +25,20 @@ public class EmployeeDAO {
     private EmployeeRepository employeeRepository;
 
     @Autowired
+    private CompanyRespository companyRespository;
+
+    @Autowired
     private CompanyDAO companyDAO;
 
     @Autowired
     private ServicesDAO servicesDAO;
+
+    @Autowired
+    private ServicesRepository servicesRepository;
+
+    @Autowired
+    private InternalServiceRepository internalServiceRepository;
+
 
     private static final Logger logger = Logger.getLogger(EmployeeDAO.class.getName());
 
@@ -47,6 +60,8 @@ public class EmployeeDAO {
             Company company = this.companyDAO.findByIdCompany(idCompany);
             if(company != null){
                 employee.setMyCompany(company);
+                company.getEmployees().add(employee);
+                this.companyRespository.save(company);
                 return this.employeeRepository.save(employee);
             }
         }catch (Exception e){
@@ -74,7 +89,11 @@ public class EmployeeDAO {
                     .filter(s -> s.getId().equals(idService)).toList().getFirst();
 
             if(employee != null && services != null){
+                employee.setMyCompany(company);
                 employee.getMyServices().add(services);
+                services.getEmployees().add(employee);
+
+                this.servicesRepository.save(services);
                 this.employeeRepository.save(employee);
             }
 
@@ -102,6 +121,12 @@ public class EmployeeDAO {
 
             if(employee != null && !services.isEmpty()){
                 employee.getMyServices().addAll(services);
+
+                services.forEach(services1 -> {
+                    services1.getEmployees().add(employee);
+                    this.servicesRepository.save(services1);
+                });
+
                 this.employeeRepository.save(employee);
             }
 
@@ -136,7 +161,9 @@ public class EmployeeDAO {
 
             if(employee != null && services != null && internalService != null){
                 employee.getMyServicesInternal().add(internalService);
+                internalService.getEmployeesInternalService().add(employee);
                 this.employeeRepository.save(employee);
+                this.internalServiceRepository.save(internalService);
             }
 
 
@@ -167,6 +194,12 @@ public class EmployeeDAO {
 
             if(employee != null && !services.isEmpty() && !internalServices.isEmpty()){
                 employee.getMyServicesInternal().addAll(internalServices);
+
+                internalServices.forEach(internalService -> {
+                    internalService.getEmployeesInternalService().add(employee);
+                    this.internalServiceRepository.save(internalService);
+                });
+
                 this.employeeRepository.save(employee);
             }
 

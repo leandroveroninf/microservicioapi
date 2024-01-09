@@ -1,5 +1,7 @@
 package com.levgod.microservicioapi.services;
 
+import com.levgod.microservicioapi.DTO.employees.EmployeeConvert;
+import com.levgod.microservicioapi.DTO.employees.EmployeeDTO;
 import com.levgod.microservicioapi.entities.Company;
 import com.levgod.microservicioapi.entities.Employee;
 import com.levgod.microservicioapi.repositories.DAO.CompanyDAO;
@@ -18,11 +20,15 @@ public class EmployeeService {
     @Autowired
     private CompanyDAO companyService;
 
-    public Employee findByUser(Long idEmployee, Long idCompany){
+    @Autowired
+    private EmployeeConvert employeeConvert;
+
+
+    public EmployeeDTO findByUser(Long idEmployee, Long idCompany){
         try{
             Company company = this.companyService.findByIdCompany(idCompany);
             if(company != null){
-                return this.employeeDAO.findByIdEmployee(idEmployee);
+                return this.employeeConvert.convertDTO(this.employeeDAO.findByIdEmployee(idEmployee));
             }
         }catch (Exception e){
 
@@ -35,9 +41,9 @@ public class EmployeeService {
     /*
        Agregamos un usuario y lo guardamos en la compania correspondiente
     */
-    public Employee save(Employee employee, Long idCompany){
+    public EmployeeDTO save(Employee employee, Long idCompany){
         try{
-            return this.employeeDAO.save(employee, idCompany);
+            return this.employeeConvert.convertDTO(this.employeeDAO.save(employee, idCompany));
         }catch (Exception e){
 
             return null;

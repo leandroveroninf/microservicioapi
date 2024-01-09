@@ -1,9 +1,12 @@
 package com.levgod.microservicioapi.repositories.DAO;
 
 import com.levgod.microservicioapi.entities.Bosses;
+import com.levgod.microservicioapi.entities.Company;
+import com.levgod.microservicioapi.entities.Services;
 import com.levgod.microservicioapi.repositories.BossesRespository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
 import java.util.List;
@@ -52,6 +55,12 @@ public class BossesDAO {
 
             return null;
         }
+    }
+
+
+    public void addServiceBosses(Company company, Services services, Bosses bosses){
+
+
     }
 
 

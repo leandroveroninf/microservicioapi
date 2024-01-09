@@ -10,5 +10,5 @@ public record SimpleCompanyDTO(
         String email,
         String address,
         String icon,
-        Set<BossesDTO> bossesDTO) {
+        Set<BossesDTO> bosses) {
 }

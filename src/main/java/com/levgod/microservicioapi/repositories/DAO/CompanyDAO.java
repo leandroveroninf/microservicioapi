@@ -1,10 +1,7 @@
 package com.levgod.microservicioapi.repositories.DAO;
 
 import com.levgod.microservicioapi.entities.*;
-import com.levgod.microservicioapi.repositories.BossesRespository;
-import com.levgod.microservicioapi.repositories.CompanyRespository;
-import com.levgod.microservicioapi.repositories.InternalServiceRepository;
-import com.levgod.microservicioapi.repositories.ServicesRepository;
+import com.levgod.microservicioapi.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -29,6 +26,12 @@ public class CompanyDAO {
 
     @Autowired
     private BossesRespository bossesRespository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private ChargeOfCompanyRepository ofCompanyRepository;
 
     private static final Logger logger = Logger.getLogger(CompanyDAO.class.getName());
 
@@ -106,8 +109,10 @@ public class CompanyDAO {
             Company company = this.companyRespository.findById(idCompany).orElse(null);
 
             if(company != null){
+                ofCompany.setCompany(company);
                 company.getChargeOfCompanies().add(ofCompany);
                 this.companyRespository.save(company);
+                this.ofCompanyRepository.save(ofCompany);
             }
 
         }catch (Exception e){
@@ -121,6 +126,10 @@ public class CompanyDAO {
         try{
             Company company = this.companyRespository.findById(idCompany).orElse(null);
             if(company != null){
+                ofCompanies.forEach(ofCompany -> {
+                    ofCompany.setCompany(company);
+                    this.ofCompanyRepository.save(ofCompany);
+                });
                 company.getChargeOfCompanies().addAll(ofCompanies);
                 this.companyRespository.save(company);
             }
@@ -139,6 +148,8 @@ public class CompanyDAO {
 
             if(company != null){
                 company.getEmployees().add(employee);
+                employee.setMyCompany(company);
+                this.employeeRepository.save(employee);
                 this.companyRespository.save(company);
             }
 
@@ -153,6 +164,12 @@ public class CompanyDAO {
         try{
             Company company = this.companyRespository.findById(idCompany).orElse(null);
             if(company != null){
+
+                employees.forEach(employee -> {
+                    employee.setMyCompany(company);
+                    this.employeeRepository.save(employee);
+                });
+
                 company.getEmployees().addAll(employees);
                 this.companyRespository.save(company);
             }
@@ -270,31 +287,6 @@ public class CompanyDAO {
                 company.getMyServicesInternal().addAll(internalServices);
                 this.companyRespository.save(company);
             }
-
-//
-//            if (company != null) {
-//
-//
-//                List<Services> servicesList = this.servicesRepository.findAll();
-//                Set<InternalService> internalServices = new HashSet<>();
-//
-//
-//                for (Services myServices : company.getMyServices()) {// Recorremos todos los servicios que tiene la empresa
-//                    for (Services services : servicesList) { // recorremos todos los servicios que hay
-//                        if (myServices.getId().equals(services.getId())) { // verificamos si coicide uno de los servicios
-//                            for (InternalService internalService : services.getInternalServices()) { // recorremos los servicios internos que estan en la db
-//                                if (idInternalServices.contains(internalService.getId())) { // verificamos si unos de los servicios internos coincide con el servicio que queremos agregar
-//                                    internalServices.add(internalService);
-//                                    internalService.getCompanies().add(company);
-//                                    this.internalServiceRepository.save(internalService); // al servicio interno le agregamos la compania
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                company.getMyServicesInternal().addAll(internalServices);
-//                this.companyRespository.save(company); // a la compania le agregamos los servicios internos
-//            }
 
         }catch (Exception e){
             logger.warning("Error al agregar los internal service a la compania: "+e.getMessage());
