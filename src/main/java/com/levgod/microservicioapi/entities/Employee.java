@@ -1,6 +1,7 @@
 package com.levgod.microservicioapi.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,7 +30,7 @@ public class Employee {
     private String post;
 
     @ManyToMany(mappedBy = "employees")
-    @JsonBackReference
+    @JsonIgnore
     private Set<Services> myServices = new HashSet<>();
 
     @ManyToMany
@@ -37,12 +38,12 @@ public class Employee {
             name = "employee_internal_service",
             joinColumns = @JoinColumn(name = "employee_id"),
             inverseJoinColumns = @JoinColumn(name = "internal_service_id"))
-    @JsonIgnoreProperties
+    @JsonIgnore
     private Set<InternalService> myServicesInternal = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
-    @JsonBackReference
+    @JsonIgnore
     private Company myCompany;
 
 

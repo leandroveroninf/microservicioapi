@@ -29,22 +29,21 @@ public class InternalService {
 
     @ManyToOne
     @JoinColumn(name = "internalService_id")
-    @JsonBackReference
+    @JsonIgnore
     private Services services;
 
 
-    @ManyToMany(mappedBy = "myServicesInternal")
-    @JsonIgnoreProperties
-    private Set<User> usersInternalService = new HashSet<>();
-
 
     @ManyToMany(mappedBy = "myServicesInternal")
-    @JsonIgnoreProperties
+    @JsonIgnore
     private Set<Employee> employeesInternalService = new HashSet<>();
 
     @ManyToMany(mappedBy = "myServicesInternal")
-    @JsonIgnoreProperties
+    @JsonIgnore
     private Set<Company> companies = new HashSet<>();
 
+    @ManyToMany(mappedBy = "myServicesInternal")
+    @JsonIgnore
+    private Set<ChargeOfCompany> ofCompanies = new HashSet<>();
 
 }

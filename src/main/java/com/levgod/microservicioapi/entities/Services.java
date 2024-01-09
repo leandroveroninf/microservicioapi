@@ -1,6 +1,8 @@
 package com.levgod.microservicioapi.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,19 +32,22 @@ public class Services implements Serializable {
     private String icon;
     private String routerLink;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_services",
-            joinColumns = @JoinColumn(name = "services_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))// Anotación en el lado "manejado" de la relación
-    private Set<User> users = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
             name = "employee_services",
             joinColumns = @JoinColumn(name = "services_id"),
             inverseJoinColumns = @JoinColumn(name = "employee_id"))// Anotación en el lado "manejado" de la relación
+    @JsonIgnore
     private Set<Employee> employees = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "ofCompanies_services",
+            joinColumns = @JoinColumn(name = "services_id"),
+            inverseJoinColumns = @JoinColumn(name = "ofCompanies_id"))
+    @JsonIgnore
+    private Set<ChargeOfCompany> ofCompanies = new HashSet<>();
 
 
     @ManyToMany
@@ -50,9 +55,11 @@ public class Services implements Serializable {
             name = "company_services",
             joinColumns = @JoinColumn(name = "services_id"),
             inverseJoinColumns = @JoinColumn(name = "company_id"))// Anotación en el lado "manejado" de la relación
+    @JsonIgnore
     private Set<Company> companies = new HashSet<>();
 
     @OneToMany(mappedBy = "services", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<InternalService> internalServices = new HashSet<>();
 
 

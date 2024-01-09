@@ -1,6 +1,7 @@
 package com.levgod.microservicioapi.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,8 +25,6 @@ public class Company {
     private Long id;
 
     private String name;
-    private String lastName;
-    private String dni;
     private String email;
     private String iconCompany;
     private String address;
@@ -33,20 +32,22 @@ public class Company {
 
     // Jefes
     @OneToMany(mappedBy = "myCompany", cascade = CascadeType.ALL)
-    @JsonBackReference
+    @JsonIgnore
     private Set<Bosses> bosses = new HashSet<>();
 
     // Encargados
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<ChargeOfCompany> chargeOfCompanies = new HashSet<>();
 
     // Empleados
     @OneToMany(mappedBy = "myCompany", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Employee> employees = new HashSet<>();
 
     // Servicios generales
     @ManyToMany(mappedBy = "companies")
-    @JsonBackReference
+    @JsonIgnore
     private Set<Services> myServices = new HashSet<>();
 
     // Servicios internos
@@ -55,15 +56,7 @@ public class Company {
             name = "company_internal_service",
             joinColumns = @JoinColumn(name = "company_id"),
             inverseJoinColumns = @JoinColumn(name = "internal_service_id"))
-    @JsonIgnoreProperties
+    @JsonIgnore
     private Set<InternalService> myServicesInternal = new HashSet<>();
-
-
-
-
-
-
-
-
 
 }

@@ -1,6 +1,7 @@
 package com.levgod.microservicioapi.services;
 
-import com.levgod.microservicioapi.DTO.ServiceFindDTO;
+import com.levgod.microservicioapi.DTO.services.ServiceDTO;
+import com.levgod.microservicioapi.DTO.services.ServiceFindDTO;
 import com.levgod.microservicioapi.entities.InternalService;
 import com.levgod.microservicioapi.entities.Services;
 import com.levgod.microservicioapi.repositories.DAO.ServicesDAO;
@@ -24,7 +25,7 @@ public class ServicesService {
     @Autowired
     private InternalServiceRepository internalServiceRepository;
 
-    public List<Services> saveAll(Iterable<Services> services){
+    public Set<ServiceDTO> saveAll(Iterable<Services> services){
         try{
             return this.servicesDAO.saveAll(services);
         }catch (Exception e){
@@ -34,11 +35,11 @@ public class ServicesService {
         return null;
     }
 
-    public List<ServiceFindDTO> findAll(){
+    public Set<ServiceDTO> findAll(){
         return this.servicesDAO.findAll();
     }
 
-    public Services findByID(Long idService){
+    public ServiceDTO findByID(Long idService){
         try{
             return this.servicesDAO.findByID(idService);
         }catch (Exception e){

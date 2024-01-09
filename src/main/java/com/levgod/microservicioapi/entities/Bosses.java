@@ -1,6 +1,7 @@
 package com.levgod.microservicioapi.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,7 +27,7 @@ public class Bosses {
 
     @ManyToOne
     @JoinColumn(name = "bosse_id")
-    @JsonBackReference
+    @JsonIgnore
     private Company myCompany;
 
 
