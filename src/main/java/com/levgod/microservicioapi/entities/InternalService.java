@@ -32,6 +32,9 @@ public class InternalService {
     @JsonIgnore
     private Services services;
 
+    @ManyToMany(mappedBy = "myServicesInternal")
+    @JsonIgnore
+    private Set<Leader> leadersInternalService = new HashSet<>();
 
 
     @ManyToMany(mappedBy = "myServicesInternal")

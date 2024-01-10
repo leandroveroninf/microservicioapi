@@ -20,6 +20,12 @@ public class ServiceCtrl {
     @Autowired
     private ServicesService servicesRepository;
 
+    /*
+        ----------------------------------------------------------------------------
+                                        POST
+        ----------------------------------------------------------------------------
+     */
+
     @PostMapping
     public ResponseEntity<?> saveAll(@RequestBody Iterable<Services> entities){
         try{
@@ -30,15 +36,13 @@ public class ServiceCtrl {
         }
     }
 
-    @GetMapping
-    public ResponseEntity<?> findAll(){
-        try{
 
-            return new ResponseEntity(this.servicesRepository.findAll(), HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+    /*
+        ----------------------------------------------------------------------------
+                                        PUT
+        ----------------------------------------------------------------------------
+     */
+
 
     @PutMapping("/add-internal-service")
     public ResponseEntity<?> addUserService(@RequestParam Long idService, @RequestBody InternalService internalService){
@@ -61,6 +65,40 @@ public class ServiceCtrl {
         }
 
     }
+
+
+    /*
+        ----------------------------------------------------------------------------
+                                        GET
+        ----------------------------------------------------------------------------
+     */
+
+    @GetMapping()
+    public ResponseEntity<?> findAll(){
+        try{
+
+            return new ResponseEntity(this.servicesRepository.findAll(), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/service/")
+    public ResponseEntity<?> findById(@RequestParam Long idService){
+        try{
+
+            return new ResponseEntity(this.servicesRepository.findByID(idService), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    /*
+        ----------------------------------------------------------------------------
+                                        DELETE
+        ----------------------------------------------------------------------------
+     */
 
 
 }

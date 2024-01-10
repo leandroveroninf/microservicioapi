@@ -18,7 +18,6 @@ public record CompanyDTO (
         Set<BossesDTO> bosses,
         Set<ChargeOfCompanyDTO> chargeOfCompany,
         Set<EmployeeDTO> employees,
-        Set<SimpleServiceDTO> myServices,
-        Set<InternalServiceDTO> myInternalService
+        Set<ServiceDTO> myServices
         ) {
 }

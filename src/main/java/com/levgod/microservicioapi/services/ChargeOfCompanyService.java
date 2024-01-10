@@ -44,7 +44,7 @@ public class ChargeOfCompanyService {
         }
     }
 
-    public void addAllInternalService(Long idOfCompany, List<Long> idServices, Long idCompany, List<Long> idInternalServices){
+    public void addAllInternalService(Long idOfCompany, Long idServices, Long idCompany, List<Long> idInternalServices){
         try{
             this.ofCompanyDAO.addAllInternalService(idOfCompany, idServices, idCompany, idInternalServices);
         }catch (Exception e){

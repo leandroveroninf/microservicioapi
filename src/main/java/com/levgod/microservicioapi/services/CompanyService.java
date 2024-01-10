@@ -97,6 +97,27 @@ public class CompanyService {
     }
 
 
+    public void addLeader(Long idCompany, Leader leader){
+        try{
+            this.companyDAO.addLeader(idCompany, leader);
+
+        }catch (Exception e){
+            System.out.println("Error al agregar un empleado a la compania: "+ e);
+            logger.warning("Error al agregar un empleado a la compania: "+e.getMessage());
+        }
+    }
+
+    public void addAllLeaders(Long idCompany, Set<Leader> leaders){
+
+        try{
+            this.companyDAO.addAllLeaders(idCompany, leaders);
+        }catch (Exception e){
+            System.out.println("Error al agregar los empleados a la compania: "+ e);
+            logger.warning("Error al agregar los empleados a la compania: "+e.getMessage());
+        }
+    }
+
+
 
     // Agregamos los empleados de la compania
     public void addEmployee(Long idCompany, Employee employee){

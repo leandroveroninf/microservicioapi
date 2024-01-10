@@ -10,8 +10,11 @@ import com.levgod.microservicioapi.DTO.employees.EmployeeDTO;
 import com.levgod.microservicioapi.DTO.internalServices.InternalServiceConvert;
 import com.levgod.microservicioapi.DTO.internalServices.InternalServiceDTO;
 import com.levgod.microservicioapi.DTO.services.ServiceConvert;
+import com.levgod.microservicioapi.DTO.services.ServiceDTO;
 import com.levgod.microservicioapi.DTO.services.SimpleServiceDTO;
 import com.levgod.microservicioapi.entities.Company;
+import com.levgod.microservicioapi.entities.InternalService;
+import com.levgod.microservicioapi.entities.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +24,47 @@ import java.util.Set;
 @Service
 public class CompanyConvert implements Convert<CompanyDTO, Company> {
 
+    private Set<ServiceDTO> innerJoinMyServiceAndMyIneterServices(Set<Services> services, Set<InternalService> internalServices) {
+        Set<ServiceDTO> myServices = new HashSet<>();
+
+        for (Services service : services) {
+            Set<InternalServiceDTO> internalServicesDtos = new HashSet<>();
+            for (InternalService internalService : internalServices) {
+
+                service.getInternalServices().forEach(IS -> {
+                    if (IS.getId().equals(internalService.getId())) {
+                        internalServicesDtos.add(
+                                new InternalServiceDTO(
+                                        internalService.getId(),
+                                        internalService.getLabel(),
+                                        internalService.getIcon(),
+                                        internalService.getRouterLink()
+                                )
+                        );
+                    }
+                });
+            }
+
+            myServices.add(
+                    new ServiceDTO(
+                            service.getId(),
+                            service.getLabel(),
+                            service.getIcon(),
+                            service.getRouterLink(),
+                            internalServicesDtos,
+                            null
+                    )
+            );
+
+        }
+
+        return myServices;
+
+    }
 
     @Override
     public CompanyDTO convertDTO(Company entity) {
         BossesConvert bossesConvert = new BossesConvert();
-        InternalServiceConvert internalServiceConvert = new InternalServiceConvert();
-        ServiceConvert serviceConvert = new ServiceConvert();
         EmployeeConvert employeeConvert = new EmployeeConvert();
         ChargeOfCompanyConvert ofCompanyConvert = new ChargeOfCompanyConvert();
 
@@ -45,16 +83,9 @@ public class CompanyConvert implements Convert<CompanyDTO, Company> {
                         .stream().map(employeeConvert::convertDTO).toList()
         );
 
-        Set<InternalServiceDTO> internalServiceDTOS = new HashSet<>(
-                entity.getMyServicesInternal().stream()
-                        .map(internalServiceConvert::convertDTO).toList()
-        );
 
-        Set<SimpleServiceDTO> simpleServiceDTOS = new HashSet<>(
-                entity.getMyServices().stream()
-                        .map(serviceConvert::convertDTOSimple)
-                        .toList()
-        );
+
+        Set<ServiceDTO> myServices = this.innerJoinMyServiceAndMyIneterServices(entity.getMyServices(), entity.getMyServicesInternal());
 
         return new CompanyDTO(
                 entity.getId(),
@@ -65,8 +96,7 @@ public class CompanyConvert implements Convert<CompanyDTO, Company> {
                 bossesDTO,
                 ofCompanyDTOS,
                 employeeDTO,
-                simpleServiceDTOS,
-                internalServiceDTOS);
+                myServices);
     }
 
     public SimpleCompanyDTO convertDTOSimple(Company entity){

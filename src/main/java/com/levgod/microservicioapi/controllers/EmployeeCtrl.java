@@ -72,7 +72,7 @@ public class EmployeeCtrl {
     }
 
     @PostMapping("/company/add-all-service-internal/")
-    public ResponseEntity<?> addAllInternalService(@RequestParam Long idEmployee, @RequestParam List<Long> idServices, @RequestParam Long idCompany, @RequestParam List<Long> idInternalServices){
+    public ResponseEntity<?> addAllInternalService(@RequestParam Long idEmployee, @RequestParam Long idServices, @RequestParam Long idCompany, @RequestParam List<Long> idInternalServices){
         try{
             this.employeeService.addAllInternalService(idEmployee, idServices, idCompany,idInternalServices);
             return new ResponseEntity( HttpStatus.OK);

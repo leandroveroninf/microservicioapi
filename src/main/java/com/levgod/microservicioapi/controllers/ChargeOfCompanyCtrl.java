@@ -49,7 +49,7 @@ public class ChargeOfCompanyCtrl {
     }
 
     @PostMapping("/company/add-all-service-internal/")
-    public ResponseEntity<?> addAllInternalService(@RequestParam Long idOfCompany, @RequestParam List<Long> idServices, @RequestParam Long idCompany, @RequestParam List<Long> idInternalServices) {
+    public ResponseEntity<?> addAllInternalService(@RequestParam Long idOfCompany, @RequestParam Long idServices, @RequestParam Long idCompany, @RequestParam List<Long> idInternalServices) {
         try {
             this.companyService.addAllInternalService(idOfCompany, idServices, idCompany, idInternalServices);
             return new ResponseEntity(HttpStatus.OK);

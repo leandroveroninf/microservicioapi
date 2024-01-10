@@ -2,14 +2,20 @@ package com.levgod.microservicioapi.services;
 
 import com.levgod.microservicioapi.DTO.employees.EmployeeConvert;
 import com.levgod.microservicioapi.DTO.employees.EmployeeDTO;
+import com.levgod.microservicioapi.DTO.internalServices.InternalServiceDTO;
+import com.levgod.microservicioapi.DTO.services.ServiceDTO;
 import com.levgod.microservicioapi.entities.Company;
 import com.levgod.microservicioapi.entities.Employee;
+import com.levgod.microservicioapi.entities.InternalService;
+import com.levgod.microservicioapi.entities.Services;
 import com.levgod.microservicioapi.repositories.DAO.CompanyDAO;
 import com.levgod.microservicioapi.repositories.DAO.EmployeeDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class EmployeeService {
@@ -80,7 +86,7 @@ public class EmployeeService {
         }
     }
 
-    public void addAllInternalService(Long idEmployee, List<Long> idServices, Long idCompany, List<Long> idInternalServices){
+    public void addAllInternalService(Long idEmployee, Long idServices, Long idCompany, List<Long> idInternalServices){
         try{
             this.employeeDAO.addAllInternalService(idEmployee, idServices, idCompany, idInternalServices);
         }catch (Exception e){

@@ -40,6 +40,11 @@ public class Company {
     @JsonIgnore
     private Set<ChargeOfCompany> chargeOfCompanies = new HashSet<>();
 
+    // Lider
+    @OneToMany(mappedBy = "myCompany", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Leader> leaders = new HashSet<>();
+
     // Empleados
     @OneToMany(mappedBy = "myCompany", cascade = CascadeType.ALL)
     @JsonIgnore

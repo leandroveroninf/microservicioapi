@@ -42,6 +42,8 @@ public class EmployeeDAO {
 
     private static final Logger logger = Logger.getLogger(EmployeeDAO.class.getName());
 
+
+
     public Employee findByIdEmployee(Long idEmployee){
         try{
             return this.employeeRepository.findById(idEmployee).orElse(null);
@@ -160,10 +162,19 @@ public class EmployeeDAO {
                     .filter(si -> si.getId().equals(idInternalService)).toList().getFirst();
 
             if(employee != null && services != null && internalService != null){
-                employee.getMyServicesInternal().add(internalService);
-                internalService.getEmployeesInternalService().add(employee);
-                this.employeeRepository.save(employee);
-                this.internalServiceRepository.save(internalService);
+
+                // Buscamos todos los servicios generales que tiene el empleado
+                Services servicesEmployee = employee.getMyServices()
+                        .stream()
+                        .filter(s -> s.getId().equals(idService)).toList().getFirst();
+
+                // Si el usuario tiene el servicio general, entonces le agregamos el servicio interno de ese servicio general
+                if(services.getId().equals(servicesEmployee.getId())){
+                    employee.getMyServicesInternal().add(internalService);
+                    internalService.getEmployeesInternalService().add(employee);
+                    this.employeeRepository.save(employee);
+                    this.internalServiceRepository.save(internalService);
+                }
             }
 
 
@@ -173,7 +184,7 @@ public class EmployeeDAO {
         }
     }
 
-    public void addAllInternalService(Long idEmployee, List<Long> idServices, Long idCompany, List<Long> idInternalServices){
+    public void addAllInternalService(Long idEmployee, Long idService, Long idCompany, List<Long> idInternalServices){
         try{
 
             Company company = this.companyDAO
@@ -183,22 +194,32 @@ public class EmployeeDAO {
                     .stream()
                     .filter(ep -> ep.getId().equals(idEmployee)).toList().getFirst();
 
-
-            Set<Services> services = new HashSet<>(company.getMyServices()
+            Services services = company.getMyServices()
                     .stream()
-                    .filter(s -> idServices.contains(s.getId())).toList());
+                    .filter(s -> s.getId().equals(idService)).toList().getFirst();
 
             Set<InternalService> internalServices = new HashSet<>(company.getMyServicesInternal()
                     .stream()
                     .filter(SI -> idInternalServices.contains(SI.getId())).toList());
 
-            if(employee != null && !services.isEmpty() && !internalServices.isEmpty()){
-                employee.getMyServicesInternal().addAll(internalServices);
+            if(employee != null && services != null && !internalServices.isEmpty()){
 
-                internalServices.forEach(internalService -> {
-                    internalService.getEmployeesInternalService().add(employee);
-                    this.internalServiceRepository.save(internalService);
-                });
+                // Buscamos todos los servicios generales que tiene el empleado
+                Services servicesEmployee = employee.getMyServices()
+                        .stream()
+                        .filter(s -> s.getId().equals(idService)).toList().getFirst();
+
+                if(services.getId().equals(servicesEmployee.getId())){
+                    employee.getMyServicesInternal().addAll(internalServices);
+
+                    internalServices.forEach(internalService -> {
+                        internalService.getEmployeesInternalService().add(employee);
+                        this.internalServiceRepository.save(internalService);
+                    });
+
+                }
+
+
 
                 this.employeeRepository.save(employee);
             }

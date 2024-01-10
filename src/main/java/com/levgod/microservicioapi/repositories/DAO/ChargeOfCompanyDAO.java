@@ -29,8 +29,8 @@ public class ChargeOfCompanyDAO {
 
     private static final Logger logger = Logger.getLogger(ChargeOfCompanyDAO.class.getName());
 
-    public void addService(Long idCompany, Long idService, Long idOfCompany){
-        try{
+    public void addService(Long idCompany, Long idService, Long idOfCompany) {
+        try {
 
             Company company = this.companyDAO
                     .findByIdCompany(idCompany);
@@ -44,7 +44,7 @@ public class ChargeOfCompanyDAO {
                     .stream()
                     .filter(s -> s.getId().equals(idService)).toList().getFirst();
 
-            if(ofCompany != null && services != null){
+            if (ofCompany != null && services != null) {
                 ofCompany.setCompany(company);
                 ofCompany.getMyServices().add(services);
                 services.getOfCompanies().add(ofCompany);
@@ -54,14 +54,13 @@ public class ChargeOfCompanyDAO {
             }
 
 
-
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
 
-    public void addAllService(Long idOfCompany, List<Long> idServices, Long idCompany){
-        try{
+    public void addAllService(Long idOfCompany, List<Long> idServices, Long idCompany) {
+        try {
 
             Company company = this.companyDAO
                     .findByIdCompany(idCompany);
@@ -75,7 +74,7 @@ public class ChargeOfCompanyDAO {
                     .stream()
                     .filter(s -> idServices.contains(s.getId())).toList());
 
-            if(ofCompany != null && !services.isEmpty()){
+            if (ofCompany != null && !services.isEmpty()) {
                 ofCompany.getMyServices().addAll(services);
 
                 services.forEach(services1 -> {
@@ -87,14 +86,13 @@ public class ChargeOfCompanyDAO {
             }
 
 
-
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
 
-    public void addInternalService(Long idOfCompany, Long idService, Long idCompany, Long idInternalService){
-        try{
+    public void addInternalService(Long idOfCompany, Long idService, Long idCompany, Long idInternalService) {
+        try {
 
             Company company = this.companyDAO
                     .findByIdCompany(idCompany);
@@ -112,22 +110,31 @@ public class ChargeOfCompanyDAO {
                     .stream()
                     .filter(si -> si.getId().equals(idInternalService)).toList().getFirst();
 
-            if(ofCompany != null && services != null && internalService != null){
-                ofCompany.getMyServicesInternal().add(internalService);
-                internalService.getOfCompanies().add(ofCompany);
-                this.chargeOfCompanyRepository.save(ofCompany);
-                this.internalServiceRepository.save(internalService);
+            if (ofCompany != null && services != null && internalService != null) {
+
+                Services myServices = ofCompany.getMyServices()
+                        .stream()
+                        .filter(s -> s.getId().equals(idService)).toList().getFirst();
+
+                if (services.getId().equals(myServices.getId())) {
+                    ofCompany.getMyServicesInternal().add(internalService);
+                    internalService.getOfCompanies().add(ofCompany);
+                    this.chargeOfCompanyRepository.save(ofCompany);
+                    this.internalServiceRepository.save(internalService);
+
+                }
+
+
             }
 
 
-
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
 
-    public void addAllInternalService(Long idOfCompany, List<Long> idServices, Long idCompany, List<Long> idInternalServices){
-        try{
+    public void addAllInternalService(Long idOfCompany, Long idService, Long idCompany, List<Long> idInternalServices) {
+        try {
 
             Company company = this.companyDAO
                     .findByIdCompany(idCompany);
@@ -137,34 +144,39 @@ public class ChargeOfCompanyDAO {
                     .filter(ep -> ep.getId().equals(idOfCompany)).toList().getFirst();
 
 
-            Set<Services> services = new HashSet<>(company.getMyServices()
+            Services services = company.getMyServices()
                     .stream()
-                    .filter(s -> idServices.contains(s.getId())).toList());
+                    .filter(s -> s.getId().equals(idService)).toList().getFirst();
 
             Set<InternalService> internalServices = new HashSet<>(company.getMyServicesInternal()
                     .stream()
                     .filter(SI -> idInternalServices.contains(SI.getId())).toList());
 
-            if(ofCompany != null && !services.isEmpty() && !internalServices.isEmpty()){
-                ofCompany.getMyServicesInternal().addAll(internalServices);
+            if (ofCompany != null && services != null && !internalServices.isEmpty()) {
 
-                internalServices.forEach(internalService -> {
-                    internalService.getOfCompanies().add(ofCompany);
-                    this.internalServiceRepository.save(internalService);
-                });
+                Services myServices = ofCompany.getMyServices()
+                        .stream()
+                        .filter(s -> s.getId().equals(idService)).toList().getFirst();
 
-                this.chargeOfCompanyRepository.save(ofCompany);
+                if (services.getId().equals(myServices.getId())) {
+                    ofCompany.getMyServicesInternal().addAll(internalServices);
+
+                    internalServices.forEach(internalService -> {
+                        internalService.getOfCompanies().add(ofCompany);
+                        this.internalServiceRepository.save(internalService);
+                    });
+
+                    this.chargeOfCompanyRepository.save(ofCompany);
+
+                }
+
             }
 
 
-
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
-
-
-
 
 
 }

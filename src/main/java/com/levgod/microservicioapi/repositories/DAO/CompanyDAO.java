@@ -28,6 +28,9 @@ public class CompanyDAO {
     private BossesRespository bossesRespository;
 
     @Autowired
+    private LeaderRepository leaderRepository;
+
+    @Autowired
     private EmployeeRepository employeeRepository;
 
     @Autowired
@@ -35,25 +38,11 @@ public class CompanyDAO {
 
     private static final Logger logger = Logger.getLogger(CompanyDAO.class.getName());
 
-
-    public Company findByIdCompany(Long idCompany){
-        try{
-            return this.companyRespository.findById(idCompany).orElse(null);
-        }catch (Exception e){
-            logger.warning("Error al buscar la compania: "+e.getMessage());
-            return null;
-        }
-    }
-
-    public List<Company> findAllCompany(){
-        try{
-            return this.companyRespository.findAll();
-        }catch (Exception e){
-            logger.warning("Error al buscar la compania: "+e.getMessage());
-            return null;
-        }
-    }
-
+    /*
+        ----------------------------------------------------------------------------
+         Creamos la compania
+        ----------------------------------------------------------------------------
+     */
 
     public Company saveCompany(Company company){
         try {
@@ -66,7 +55,39 @@ public class CompanyDAO {
     }
 
 
-    // Agregamos los jefes de la compania
+    /*
+        ----------------------------------------------------------------------------
+         Consulta de la compania
+        ----------------------------------------------------------------------------
+     */
+
+    public List<Company> findAllCompany(){
+        try{
+            return this.companyRespository.findAll();
+        }catch (Exception e){
+            logger.warning("Error al buscar la compania: "+e.getMessage());
+            return null;
+        }
+    }
+
+    public Company findByIdCompany(Long idCompany){
+        try{
+            return this.companyRespository.findById(idCompany).orElse(null);
+        }catch (Exception e){
+            logger.warning("Error al buscar la compania: "+e.getMessage());
+            return null;
+        }
+    }
+
+
+
+
+
+    /*
+        ----------------------------------------------------------------------------
+         Agregamos a los Jefes
+        ----------------------------------------------------------------------------
+     */
     public void addBossse(Long idCompany, Bosses boss){
         try{
             Company company = this.companyRespository.findById(idCompany).orElse(null);
@@ -103,7 +124,11 @@ public class CompanyDAO {
     }
 
 
-    // Agregamos los encargados de la compania
+    /*
+        ----------------------------------------------------------------------------
+         Agregamos a los Encargados
+        ----------------------------------------------------------------------------
+     */
     public void addChargeOfCompany(Long idCompany, ChargeOfCompany ofCompany){
         try{
             Company company = this.companyRespository.findById(idCompany).orElse(null);
@@ -139,9 +164,11 @@ public class CompanyDAO {
         }
     }
 
-
-
-    // Agregamos los empleados de la compania
+    /*
+    ----------------------------------------------------------------------------
+     Agregamos a los empleados
+    ----------------------------------------------------------------------------
+ */
     public void addEmployee(Long idCompany, Employee employee){
         try{
             Company company = this.companyRespository.findById(idCompany).orElse(null);
@@ -180,7 +207,54 @@ public class CompanyDAO {
     }
 
 
-    // Agregamos los servicios que tendra la compania
+    /*
+        ----------------------------------------------------------------------------
+         Agregamos a los lideres
+        ----------------------------------------------------------------------------
+     */
+    public void addLeader(Long idCompany, Leader leader){
+        try{
+            Company company = this.companyRespository.findById(idCompany).orElse(null);
+
+            if(company != null){
+                company.getLeaders().add(leader);
+                leader.setMyCompany(company);
+                this.leaderRepository.save(leader);
+                this.companyRespository.save(company);
+            }
+
+        }catch (Exception e){
+            System.out.println("Error al agregar un empleado a la compania: "+ e);
+            logger.warning("Error al agregar un empleado a la compania: "+e.getMessage());
+        }
+    }
+
+    public void addAllLeaders(Long idCompany, Set<Leader> leaders){
+
+        try{
+            Company company = this.companyRespository.findById(idCompany).orElse(null);
+            if(company != null){
+
+                leaders.forEach(leader -> {
+                    leader.setMyCompany(company);
+                    this.leaderRepository.save(leader);
+                });
+
+                company.getLeaders().addAll(leaders);
+                this.companyRespository.save(company);
+            }
+        }catch (Exception e){
+            System.out.println("Error al agregar los empleados a la compania: "+ e);
+            logger.warning("Error al agregar los empleados a la compania: "+e.getMessage());
+        }
+    }
+
+
+    /*
+        ----------------------------------------------------------------------------
+         Agregamos los servicios
+        ----------------------------------------------------------------------------
+     */
     public void addService(Long idCompany, Long idService){
         try{
 
@@ -226,7 +300,11 @@ public class CompanyDAO {
 
 
 
-    // Agregamos los servicios internos que tendra la compania
+    /*
+        ----------------------------------------------------------------------------
+         Agregamos los servicios internos
+        ----------------------------------------------------------------------------
+     */
     public void addInternalService(Long idCompany, Long idInternalService) {
         try {
 

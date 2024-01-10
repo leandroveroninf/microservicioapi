@@ -1,9 +1,6 @@
 package com.levgod.microservicioapi.controllers;
 
-import com.levgod.microservicioapi.entities.Bosses;
-import com.levgod.microservicioapi.entities.ChargeOfCompany;
-import com.levgod.microservicioapi.entities.Company;
-import com.levgod.microservicioapi.entities.Employee;
+import com.levgod.microservicioapi.entities.*;
 import com.levgod.microservicioapi.services.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -149,6 +146,27 @@ public class CompanyCtrl {
     public ResponseEntity<?> addAllChargeOfCompany(@RequestParam Long idCompany, @RequestBody Set<ChargeOfCompany> ofCompany ){
         try{
             this.companyService.addAllChargeOfCompany(idCompany, ofCompany);
+            return new ResponseEntity(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @PutMapping("/company/leader/")
+    public ResponseEntity<?> addLeader(@RequestParam Long idCompany, @RequestBody Leader leader ){
+        try{
+            this.companyService.addLeader(idCompany, leader);
+            return new ResponseEntity(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/company/leader-all/")
+    public ResponseEntity<?> addAllLeader(@RequestParam Long idCompany, @RequestBody Set<Leader> leaders ){
+        try{
+            this.companyService.addAllLeaders(idCompany, leaders);
             return new ResponseEntity(HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

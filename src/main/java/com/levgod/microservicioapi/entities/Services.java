@@ -32,6 +32,14 @@ public class Services implements Serializable {
     private String icon;
     private String routerLink;
 
+    @ManyToMany
+    @JoinTable(
+            name = "leaders_services",
+            joinColumns = @JoinColumn(name = "services_id"),
+            inverseJoinColumns = @JoinColumn(name = "leader_id"))// Anotación en el lado "manejado" de la relación
+    @JsonIgnore
+    private Set<Leader> leaders = new HashSet<>();
+
 
     @ManyToMany
     @JoinTable(
